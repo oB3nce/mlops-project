@@ -1,0 +1,11 @@
+# Secrets — only .env.example is committed
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS
+.DS_Store

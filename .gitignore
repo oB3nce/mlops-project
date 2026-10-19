@@ -6,6 +6,29 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+*.pyc
+*.pyo
+*.egg-info/
 
 # OS
 .DS_Store
+
+#Docker
+volumes/
+
+# Build artifacts
+build/
+dist/
+
+
+#DVC lokális file-ok
+.dvc/cache/
+.dvc/tmp/
+.dvc/config.local
+
+#Adatok és modellek
+data/raw/*
+!data/raw/*.dvc
+!data/raw/.gitignore
+data/processed/
+models/

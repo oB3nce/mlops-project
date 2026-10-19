@@ -36,6 +36,37 @@ uv run python src/main.py     # baseline metrics on your data
 
 Prerequisites: `uv` (https://docs.astral.sh/uv/) and Python 3.12+ (uv installs it).
 
+## Local tracking services
+
+The Docker Compose stack starts Postgres for MLflow's metadata, Silo for model
+artifacts, and the MLflow tracking server. Copy `.env.example` to `.env` and
+adjust the credentials there; `.env` is git-ignored and must not be committed.
+The committed example contains placeholders.
+
+```bash
+docker compose up -d --wait
+```
+
+Open the MLflow UI at <http://localhost:5500>. The host ports map to these
+container ports:
+
+| Service | Host port | Container port | Purpose |
+| --- | ---: | ---: | --- |
+| MLflow | 5500 | 5000 | Tracking UI and API |
+| Silo | 5510 | 9000 | S3-compatible API |
+| Silo | 5511 | 9001 | Silo console |
+| Postgres | 5532 | 5432 | MLflow metadata database |
+
+These host ports are configurable in `.env`. The stack uses the `55xx` port
+block from the course labs, so only one stack using those ports can run on this
+host at a time. Stop the other stack first, or change these host ports to
+unused values. Compose also has an explicit project name so its containers and
+volumes do not collide with course lab stacks.
+
+Stop the services with `docker compose down`; this preserves the named data
+volumes. Use `docker compose down -v` only when you also want to delete the
+stored database and artifacts.
+
 ## Next
 
 1. Add your dataset to `data/` and document it in `docs/DATA_DICTIONARY.md`.

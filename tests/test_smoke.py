@@ -29,6 +29,32 @@ def test_classification_pipeline_trains():
     assert {"accuracy", "precision", "recall", "f1"} <= set(metrics)
 
 
+def test_classification_pipeline_handles_mixed_telco_data():
+    df = pd.DataFrame(
+        {
+            "customerID": [f"customer-{i}" for i in range(12)],
+            "tenure": range(12),
+            "TotalCharges": ["", "10.5", "20.0", "30.5"] * 3,
+            "Contract": ["Monthly", "Yearly"] * 6,
+            "Churn": ["No", "Yes"] * 6,
+        }
+    )
+    settings = Settings(
+        target_column="Churn",
+        problem_type="classification",
+        test_size=0.25,
+        random_seed=0,
+    )
+    x_tr, x_te, y_tr, y_te = build_dataset(settings, frame=df)
+    model = build_model(settings)
+    model.fit(x_tr, y_tr)
+    metrics = evaluate_model(model, x_te, y_te, settings)
+
+    assert "customerID" not in x_tr.columns
+    assert x_tr["TotalCharges"].isna().any()
+    assert {"accuracy", "precision", "recall", "f1"} <= set(metrics)
+
+
 def test_regression_pipeline_trains():
     rng = np.random.default_rng(1)
     x = rng.normal(size=(120, 3))

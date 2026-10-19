@@ -1,0 +1,5 @@
+[core]
+    remote = silo
+['remote "silo"']
+    url = s3://dvc-bucket
+    endpointurl = http://localhost:5501

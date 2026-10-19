@@ -15,9 +15,16 @@ dependencies = [
     # Lift it for every week at once, after re-measuring the pins.
     "pandas>=2.0.0,<3",
     "python-dotenv>=1.0.0",
+    "dvc>=3.67.1",
+    "dvc-s3>=3.3.0",
+    "mlflow>=3.17.1",
+    "pyyaml>=6.0.3",
 ]
 
 [dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
 test = [
     "pytest>=8.0.0",
 ]

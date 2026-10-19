@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from sklearn.compose import ColumnTransformer, make_column_selector
+from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.metrics import (
     accuracy_score,
@@ -11,7 +13,7 @@ from sklearn.metrics import (
     root_mean_squared_error,
 )
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from .config import Settings
 
@@ -22,7 +24,32 @@ def build_model(settings: Settings) -> Pipeline:
         estimator = LogisticRegression(max_iter=settings.max_iter)
     else:
         estimator = LinearRegression()
-    return Pipeline([("scaler", StandardScaler()), ("model", estimator)])
+
+    preprocessor = ColumnTransformer(
+        [
+            (
+                "numeric",
+                Pipeline(
+                    [
+                        ("imputer", SimpleImputer(strategy="median")),
+                        ("scaler", StandardScaler()),
+                    ]
+                ),
+                make_column_selector(dtype_include="number"),
+            ),
+            (
+                "categorical",
+                Pipeline(
+                    [
+                        ("imputer", SimpleImputer(strategy="most_frequent")),
+                        ("onehot", OneHotEncoder(handle_unknown="ignore")),
+                    ]
+                ),
+                make_column_selector(dtype_exclude="number"),
+            ),
+        ]
+    )
+    return Pipeline([("preprocessor", preprocessor), ("model", estimator)])
 
 
 def evaluate_model(model: Pipeline, x_test, y_test, settings: Settings) -> dict:

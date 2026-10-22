@@ -1,0 +1,42 @@
+stages:
+  prepare:
+    cmd: uv run python -m mlops_project.prepare
+    deps:
+      - src/mlops_project/prepare.py
+      - src/mlops_project/config.py
+      - data/raw/dataset.csv
+    params:
+      - prepare.test_size
+      - prepare.random_state
+    outs:
+      - data/processed/train.csv
+      - data/processed/test.csv
+
+  train:
+    cmd: uv run python -m mlops_project.train
+    deps:
+      - src/mlops_project/train.py
+      - src/mlops_project/config.py
+      - src/mlops_project/model.py
+      - data/processed/train.csv
+    params:
+      - train.model_type
+      - train.n_estimators
+      - train.max_depth
+      - train.random_state
+    outs:
+      - models/model.pkl
+      - models/run_id.txt
+
+  evaluate:
+    cmd: uv run python -m mlops_project.evaluate
+    deps:
+      - src/mlops_project/evaluate.py
+      - src/mlops_project/config.py
+      - src/mlops_project/model.py
+      - models/model.pkl
+      - models/run_id.txt
+      - data/processed/test.csv
+    metrics:
+      - metrics/metrics.json:
+          cache: false

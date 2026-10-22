@@ -1,0 +1,96 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: uv run python -m mlops_project.prepare
+    deps:
+    - path: data/raw/dataset.csv
+      hash: md5
+      md5: 0f9de68e012bd3aed5fa7cdc9fc421af
+      size: 977501
+    - path: src/mlops_project/config.py
+      hash: md5
+      md5: 26f60330aa6978f68e372b44ff798bbb
+      size: 1565
+    - path: src/mlops_project/prepare.py
+      hash: md5
+      md5: 1b88b5e659d3ca6c23fb4fc5b42ab3ca
+      size: 3340
+    params:
+      params.yaml:
+        prepare.random_state: 42
+        prepare.test_size: 0.2
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 0773917d3729a2af389d2cc7a65f3a3a
+      size: 180713
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 57cc9d9dfca5c6835355a8d53e67c9ed
+      size: 720975
+  train:
+    cmd: uv run python -m mlops_project.train
+    deps:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 57cc9d9dfca5c6835355a8d53e67c9ed
+      size: 720975
+    - path: src/mlops_project/config.py
+      hash: md5
+      md5: 26f60330aa6978f68e372b44ff798bbb
+      size: 1565
+    - path: src/mlops_project/model.py
+      hash: md5
+      md5: 2f111a2e58bb4c66cd14315e8c48fd0c
+      size: 2575
+    - path: src/mlops_project/train.py
+      hash: md5
+      md5: 43c36712db9b1bfd446331ae28c8d107
+      size: 7356
+    params:
+      params.yaml:
+        train.max_depth: 10
+        train.model_type: random_forest
+        train.n_estimators: 1000
+        train.random_state: 42
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 2167766b16275c1c91b68aa5b71b4661
+      size: 62287999
+    - path: models/run_id.txt
+      hash: md5
+      md5: 8bab50577196d8c9fe635e99aecd764f
+      size: 32
+  evaluate:
+    cmd: uv run python -m mlops_project.evaluate
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 0773917d3729a2af389d2cc7a65f3a3a
+      size: 180713
+    - path: models/model.pkl
+      hash: md5
+      md5: 2167766b16275c1c91b68aa5b71b4661
+      size: 62287999
+    - path: models/run_id.txt
+      hash: md5
+      md5: 8bab50577196d8c9fe635e99aecd764f
+      size: 32
+    - path: src/mlops_project/config.py
+      hash: md5
+      md5: 26f60330aa6978f68e372b44ff798bbb
+      size: 1565
+    - path: src/mlops_project/evaluate.py
+      hash: md5
+      md5: 4e1a3a756dd2ab181c22ceab9158b65d
+      size: 2365
+    - path: src/mlops_project/model.py
+      hash: md5
+      md5: 2f111a2e58bb4c66cd14315e8c48fd0c
+      size: 2575
+    outs:
+    - path: metrics/metrics.json
+      hash: md5
+      md5: 498499de040e7d67662e1112677e8116
+      size: 90

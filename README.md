@@ -47,6 +47,31 @@ The committed example contains placeholders.
 docker compose up -d --wait
 ```
 
+Run the three-stage DVC pipeline after the services are healthy:
+
+```bash
+uv run dvc repro
+```
+
+It splits `data/raw/dataset.csv`, trains the configured random-forest model, and
+evaluates it. Training and evaluation log to the same MLflow run; metrics are
+written to `metrics/metrics.json` and are visible in the MLflow UI.
+
+Register the latest pipeline run and assign its model the `staging` alias
+afterward:
+
+```bash
+uv run python -m mlops_project.register_model
+# Optionally select a specific completed run:
+uv run python -m mlops_project.register_model --run-id YOUR_RUN_ID
+```
+
+The command reads the default run ID from `models/run_id.txt`, or accepts an
+explicit `--run-id`. It verifies that the run finished and that the registered
+model version has the expected, non-empty run ID before setting the alias.
+Set `MLFLOW_REGISTERED_MODEL_NAME` in `.env` to change the default model name
+(`telco-churn-model`).
+
 Open the MLflow UI at <http://localhost:5500>. The host ports map to these
 container ports:
 
@@ -66,6 +91,22 @@ volumes do not collide with course lab stacks.
 Stop the services with `docker compose down`; this preserves the named data
 volumes. Use `docker compose down -v` only when you also want to delete the
 stored database and artifacts.
+
+## HW1 dataset versions
+
+The Telco churn dataset is versioned with DVC through the same committed
+pointer, `data/raw/dataset.csv.dvc`. Each commit records a different dataset
+version; the pointer's MD5 identifies its contents.
+
+| Version | Git commit | DVC pointer | MD5 | Size (bytes) | Rows | Columns |
+| --- | --- | --- | --- | ---: | ---: | ---: |
+| v1 | `d1ee14e` | `data/raw/dataset.csv.dvc` | `d391e79ae4fd5441337128a4a0b1de2e` | 889803 | 6399 | 21 |
+| v2 | `27ba209` | `data/raw/dataset.csv.dvc` | `0f9de68e012bd3aed5fa7cdc9fc421af` | 977501 | 7043 | 21 |
+
+Version 2 adds 644 customer rows; the original 6399 rows and all 21 columns
+are unchanged. Switch versions with `git checkout <commit> -- data/raw/dataset.csv.dvc`
+followed by `uv run dvc checkout data/raw/dataset.csv.dvc`. See
+[`docs/hw1.md`](docs/hw1.md) for the Windows commands and checksum output.
 
 ## Next
 

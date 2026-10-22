@@ -2031,7 +2031,7 @@ test = [
 requires-dist = [
     { name = "dvc", specifier = ">=3.67.1" },
     { name = "dvc-s3", specifier = ">=3.3.0" },
-    { name = "mlflow", specifier = ">=3.17.1" },
+    { name = "mlflow", specifier = "==3.17.1" },
     { name = "pandas", specifier = ">=2.0.0,<3" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },

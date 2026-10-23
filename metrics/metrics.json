@@ -1,6 +1,6 @@
 {
-  "accuracy": 0.7956,
-  "precision": 0.7824,
-  "recall": 0.7956,
-  "f1": 0.7772
+  "accuracy": 0.802,
+  "precision": 0.792,
+  "recall": 0.802,
+  "f1": 0.7939
 }

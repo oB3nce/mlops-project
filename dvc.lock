@@ -49,18 +49,18 @@ stages:
       size: 7356
     params:
       params.yaml:
-        train.max_depth: 5
+        train.max_depth: 10
         train.model_type: random_forest
-        train.n_estimators: 100
+        train.n_estimators: 200
         train.random_state: 42
     outs:
     - path: models/model.pkl
       hash: md5
-      md5: aa64d9a0d1fa72bc646113b961621b30
-      size: 527912
+      md5: d343a9cf1058f016ddf4d4da726192bc
+      size: 12480110
     - path: models/run_id.txt
       hash: md5
-      md5: 42b1e9ee83664c7a3113becda3f4db50
+      md5: c1577cbf6a96e2d21c685bf7ea1246df
       size: 32
   evaluate:
     cmd: uv run python -m mlops_project.evaluate
@@ -71,11 +71,11 @@ stages:
       size: 180713
     - path: models/model.pkl
       hash: md5
-      md5: aa64d9a0d1fa72bc646113b961621b30
-      size: 527912
+      md5: d343a9cf1058f016ddf4d4da726192bc
+      size: 12480110
     - path: models/run_id.txt
       hash: md5
-      md5: 42b1e9ee83664c7a3113becda3f4db50
+      md5: c1577cbf6a96e2d21c685bf7ea1246df
       size: 32
     - path: src/mlops_project/config.py
       hash: md5
@@ -92,5 +92,5 @@ stages:
     outs:
     - path: metrics/metrics.json
       hash: md5
-      md5: 03bd7b4da45a3f21a46855360d38d805
-      size: 90
+      md5: 0cd3c89ccc7875511788c14d883b02d9
+      size: 87

@@ -27,8 +27,8 @@ dist/
 .dvc/config.local
 
 #Adatok és modellek
-data/raw/*
-!data/raw/*.dvc
-!data/raw/.gitignore
-data/processed/
-models/
+# data/raw/*
+# !data/raw/*.dvc
+# !data/raw/.gitignore
+# data/processed/
+# models/

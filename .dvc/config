@@ -1,5 +1,5 @@
 [core]
     remote = silo
 ['remote "silo"']
-    url = s3://dvc-bucket
+    url = s3://mlflow-artifacts
     endpointurl = http://localhost:5510

@@ -82,3 +82,17 @@ To enable auto staging, run:
         dvc config core.autostage true
 Use `dvc push` to send your updates to remote storage.
 ```
+
+## R4 — Verify data after cloning
+
+In a fresh clone named `hw1-check`, I pulled the DVC-tracked files and
+verified the raw dataset checksum in PowerShell. The checksum matches the v2
+MD5 in `data/raw/dataset.csv.dvc`.
+
+```powershell
+PS E:\Sulis cuccok\MLOps\Házi check\hw1-check> Get-FileHash data/raw/dataset.csv -Algorithm MD5
+
+Algorithm       Hash                                                                   Path
+---------       ----                                                                   ----
+MD5             0F9DE68E012BD3AED5FA7CDC9FC421AF                                       E:\Sulis cuccok\MLOps\Házi check\hw1-check\data...
+```

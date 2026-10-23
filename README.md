@@ -113,3 +113,21 @@ followed by `uv run dvc checkout data/raw/dataset.csv.dvc`. See
 1. Add your dataset to `data/` and document it in `docs/DATA_DICTIONARY.md`.
 2. Write your one-page proposal in `docs/proposal.md` (Week 2 milestone).
 3. Follow [`HOMEWORK.md`](HOMEWORK.md) from HW1 onward.
+
+## DVC remote credentials (PowerShell)
+
+DVC does not automatically load AWS credentials from `.env`. After copying
+`.env.example` to `.env` and starting the Compose services, set the Silo
+credentials in the same PowerShell session before running `dvc pull` or
+`dvc push`:
+
+```powershell
+$env:AWS_ACCESS_KEY_ID = "s3_user"
+$env:AWS_SECRET_ACCESS_KEY = "s3_password"
+uv run dvc pull
+```
+
+These are the placeholder credentials from `.env.example`; use the matching
+values from your local `.env` if you changed them. Do not commit real
+credentials. The environment-variable assignments apply only to the current
+PowerShell session.

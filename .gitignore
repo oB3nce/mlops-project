@@ -26,6 +26,7 @@ dist/
 .dvc/tmp/
 .dvc/config.local
 
+mlruns/
 #Adatok és modellek
 # data/raw/*
 # !data/raw/*.dvc

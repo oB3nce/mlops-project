@@ -56,7 +56,7 @@ Data and pipelines are up to date.
 ```
 
 ## Prepare stage skipping
-After changing some params, the stage "prepare" was skipped
+After changing some params, the stage "prepare" was skipped.
 ```powershell
 PS E:\Sulis cuccok\MLOps\Házi\mlops-project> uv run dvc repro
 Stage 'prepare' didn't change, skipping                                                                                                                                                                                                                                    

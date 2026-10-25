@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 from mlflow import MlflowClient
 from mlflow.entities.model_registry import ModelVersion
 
+from .gate import require_go_verdict
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -31,6 +33,7 @@ def register_best_model(
 
     if not selected_run_id:
         raise ValueError("Cannot register model: MLflow run ID is empty.")
+    require_go_verdict(PROJECT_ROOT, selected_run_id)
 
     selected_model_name = model_name or os.getenv(
         "MLFLOW_REGISTERED_MODEL_NAME",

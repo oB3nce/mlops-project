@@ -19,6 +19,7 @@ dependencies = [
     "dvc-s3>=3.3.0",
     "mlflow==3.17.1",
     "pyyaml>=6.0.3",
+    "pandera[pandas]>=0.35.0",
 ]
 
 [dependency-groups]

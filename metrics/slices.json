@@ -1,0 +1,108 @@
+{
+  "fairness_gap": {
+    "selection_rate_gap": 0.2327,
+    "slice": "senior_citizen",
+    "tpr_gap": 0.1231
+  },
+  "slice_definitions": [
+    {
+      "column": "Contract",
+      "groups": {
+        "month_to_month": "Month-to-month",
+        "one_year": "One year",
+        "two_year": "Two year"
+      },
+      "name": "contract"
+    },
+    {
+      "column": "SeniorCitizen",
+      "groups": {
+        "non_senior": 0,
+        "senior": 1
+      },
+      "name": "senior_citizen"
+    }
+  ],
+  "slices": [
+    {
+      "column": "Contract",
+      "group": "month_to_month",
+      "metrics": {
+        "accuracy": 0.6986,
+        "f1": 0.6958,
+        "precision": 0.696,
+        "recall": 0.6986,
+        "selection_rate": 0.3803,
+        "tpr": 0.5927
+      },
+      "n": 773,
+      "positive_count": 329,
+      "slice": "contract",
+      "value": "Month-to-month"
+    },
+    {
+      "column": "Contract",
+      "group": "one_year",
+      "metrics": {
+        "accuracy": 0.8767,
+        "f1": 0.8222,
+        "precision": 0.774,
+        "recall": 0.8767,
+        "selection_rate": 0.0033,
+        "tpr": 0.0
+      },
+      "n": 300,
+      "positive_count": 36,
+      "slice": "contract",
+      "value": "One year"
+    },
+    {
+      "column": "Contract",
+      "group": "two_year",
+      "metrics": {
+        "accuracy": 0.9732,
+        "f1": 0.96,
+        "precision": 0.9471,
+        "recall": 0.9732,
+        "selection_rate": 0.0,
+        "tpr": 0.0
+      },
+      "n": 336,
+      "positive_count": 9,
+      "slice": "contract",
+      "value": "Two year"
+    },
+    {
+      "column": "SeniorCitizen",
+      "group": "non_senior",
+      "metrics": {
+        "accuracy": 0.8222,
+        "f1": 0.8125,
+        "precision": 0.8104,
+        "recall": 0.8222,
+        "selection_rate": 0.1727,
+        "tpr": 0.4891
+      },
+      "n": 1187,
+      "positive_count": 276,
+      "slice": "senior_citizen",
+      "value": 0
+    },
+    {
+      "column": "SeniorCitizen",
+      "group": "senior",
+      "metrics": {
+        "accuracy": 0.6937,
+        "f1": 0.692,
+        "precision": 0.6921,
+        "recall": 0.6937,
+        "selection_rate": 0.4054,
+        "tpr": 0.6122
+      },
+      "n": 222,
+      "positive_count": 98,
+      "slice": "senior_citizen",
+      "value": 1
+    }
+  ]
+}

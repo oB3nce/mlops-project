@@ -7,14 +7,22 @@ stages:
       hash: md5
       md5: 0f9de68e012bd3aed5fa7cdc9fc421af
       size: 977501
+    - path: reports/validation_report.json
+      hash: md5
+      md5: 1a00b2de75c76771d932a8c756942f0b
+      size: 96
     - path: src/mlops_project/config.py
       hash: md5
       md5: 26f60330aa6978f68e372b44ff798bbb
       size: 1565
     - path: src/mlops_project/prepare.py
       hash: md5
-      md5: 1b88b5e659d3ca6c23fb4fc5b42ab3ca
-      size: 3340
+      md5: f5f01716db0a150bb4f2ece5ccd3a5bc
+      size: 3718
+    - path: src/mlops_project/schemas.py
+      hash: md5
+      md5: fa010ec99b7c034c5398dbd8408858a1
+      size: 4997
     params:
       params.yaml:
         prepare.random_state: 42
@@ -24,6 +32,10 @@ stages:
       hash: md5
       md5: 0773917d3729a2af389d2cc7a65f3a3a
       size: 180713
+    - path: data/processed/test_raw_slices.csv
+      hash: md5
+      md5: 9e66f0526220d50448059afb6e971466
+      size: 196084
     - path: data/processed/train.csv
       hash: md5
       md5: 57cc9d9dfca5c6835355a8d53e67c9ed
@@ -45,8 +57,8 @@ stages:
       size: 2575
     - path: src/mlops_project/train.py
       hash: md5
-      md5: 43c36712db9b1bfd446331ae28c8d107
-      size: 7356
+      md5: f6adf32bac682438efddd827972966dc
+      size: 7466
     params:
       params.yaml:
         train.max_depth: 10
@@ -60,7 +72,7 @@ stages:
       size: 12480110
     - path: models/run_id.txt
       hash: md5
-      md5: c1577cbf6a96e2d21c685bf7ea1246df
+      md5: e158c10478077bf4aacfe8c6ac027922
       size: 32
   evaluate:
     cmd: uv run python -m mlops_project.evaluate
@@ -69,13 +81,17 @@ stages:
       hash: md5
       md5: 0773917d3729a2af389d2cc7a65f3a3a
       size: 180713
+    - path: data/processed/test_raw_slices.csv
+      hash: md5
+      md5: 9e66f0526220d50448059afb6e971466
+      size: 196084
     - path: models/model.pkl
       hash: md5
       md5: d343a9cf1058f016ddf4d4da726192bc
       size: 12480110
     - path: models/run_id.txt
       hash: md5
-      md5: c1577cbf6a96e2d21c685bf7ea1246df
+      md5: e158c10478077bf4aacfe8c6ac027922
       size: 32
     - path: src/mlops_project/config.py
       hash: md5
@@ -83,14 +99,94 @@ stages:
       size: 1565
     - path: src/mlops_project/evaluate.py
       hash: md5
-      md5: 4e1a3a756dd2ab181c22ceab9158b65d
-      size: 2365
+      md5: 5616473401ef1bb358801c641ec4911c
+      size: 13541
     - path: src/mlops_project/model.py
       hash: md5
       md5: 2f111a2e58bb4c66cd14315e8c48fd0c
       size: 2575
+    params:
+      params.yaml:
+        evaluate:
+          positive_label: Yes
+          fairness_slice: senior_citizen
+          slices:
+          - name: contract
+            column: Contract
+            groups:
+              month_to_month: Month-to-month
+              one_year: One year
+              two_year: Two year
+          - name: senior_citizen
+            column: SeniorCitizen
+            groups:
+              non_senior: 0
+              senior: 1
     outs:
     - path: metrics/metrics.json
       hash: md5
-      md5: 0cd3c89ccc7875511788c14d883b02d9
-      size: 87
+      md5: 34afb7790ae6d8f5d91e1b76637f4a5e
+      size: 345
+    - path: metrics/slices.json
+      hash: md5
+      md5: 715d5a8719266efacae625147328eb21
+      size: 2393
+  validate:
+    cmd: uv run python -m mlops_project.validate
+    deps:
+    - path: data/raw/dataset.csv
+      hash: md5
+      md5: 0f9de68e012bd3aed5fa7cdc9fc421af
+      size: 977501
+    - path: src/mlops_project/schemas.py
+      hash: md5
+      md5: fa010ec99b7c034c5398dbd8408858a1
+      size: 4997
+    - path: src/mlops_project/validate.py
+      hash: md5
+      md5: 2c5e75ee5156ad8416f29aa0c5bb85fd
+      size: 1746
+    outs:
+    - path: reports/validation_report.json
+      hash: md5
+      md5: 1a00b2de75c76771d932a8c756942f0b
+      size: 96
+  gate:
+    cmd: uv run python -m mlops_project.gate
+    deps:
+    - path: metrics/metrics.json
+      hash: md5
+      md5: 34afb7790ae6d8f5d91e1b76637f4a5e
+      size: 345
+    - path: metrics/slices.json
+      hash: md5
+      md5: 715d5a8719266efacae625147328eb21
+      size: 2393
+    - path: src/mlops_project/gate.py
+      hash: md5
+      md5: 4908b19a312455e2342f4d29ea2c9262
+      size: 9412
+    params:
+      params.yaml:
+        acceptance:
+          criteria_version: '1'
+          absolute_floors:
+            accuracy: 0.79
+            f1: 0.78
+          regression:
+            primary_metric: f1
+            tolerance: 0.01
+          slice_rules:
+          - slice: contract
+            metric: f1
+            minimum: 0.65
+            minimum_support: 200
+          - slice: senior_citizen
+            metric: f1
+            minimum: 0.65
+            minimum_support: 200
+    outs:
+    - path: reports/gate.json
+      hash: md5
+      md5: ee8c65808023bee5e49c0c3e1a73a993
+      size: 1487

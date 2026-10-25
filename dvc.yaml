@@ -1,16 +1,28 @@
 stages:
+  validate:
+    cmd: uv run python -m mlops_project.validate
+    deps:
+      - src/mlops_project/validate.py
+      - src/mlops_project/schemas.py
+      - data/raw/dataset.csv
+    outs:
+      - reports/validation_report.json:
+          cache: false
   prepare:
     cmd: uv run python -m mlops_project.prepare
     deps:
       - src/mlops_project/prepare.py
       - src/mlops_project/config.py
+      - src/mlops_project/schemas.py
       - data/raw/dataset.csv
+      - reports/validation_report.json
     params:
       - prepare.test_size
       - prepare.random_state
     outs:
       - data/processed/train.csv
       - data/processed/test.csv
+      - data/processed/test_raw_slices.csv
 
   train:
     cmd: uv run python -m mlops_project.train
@@ -37,6 +49,23 @@ stages:
       - models/model.pkl
       - models/run_id.txt
       - data/processed/test.csv
+      - data/processed/test_raw_slices.csv
+    params:
+      - evaluate
     metrics:
       - metrics/metrics.json:
+          cache: false
+      - metrics/slices.json:
+          cache: false
+
+  gate:
+    cmd: uv run python -m mlops_project.gate
+    deps:
+      - src/mlops_project/gate.py
+      - metrics/metrics.json
+      - metrics/slices.json
+    params:
+      - acceptance
+    outs:
+      - reports/gate.json:
           cache: false

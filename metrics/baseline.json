@@ -1,0 +1,14 @@
+{
+  "metrics": {
+    "accuracy": 0.802,
+    "f1": 0.7939,
+    "precision": 0.792,
+    "recall": 0.802
+  },
+  "source": {
+    "alias": "champion",
+    "model_name": "telco-churn-model",
+    "model_version": "2",
+    "run_id": "3c2af3aeb423436eb64482c4ffc70c59"
+  }
+}

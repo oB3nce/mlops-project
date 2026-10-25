@@ -7,3 +7,37 @@ train:
   n_estimators: 200
   max_depth: 10
   random_state: 42
+
+evaluate:
+  positive_label: "Yes"
+  fairness_slice: senior_citizen
+  slices:
+    - name: contract
+      column: Contract
+      groups:
+        month_to_month: Month-to-month
+        one_year: One year
+        two_year: Two year
+    - name: senior_citizen
+      column: SeniorCitizen
+      groups:
+        non_senior: 0
+        senior: 1
+
+acceptance:
+  criteria_version: "1"
+  absolute_floors:
+    accuracy: 0.79
+    f1: 0.78
+  regression:
+    primary_metric: f1
+    tolerance: 0.01
+  slice_rules:
+    - slice: contract
+      metric: f1
+      minimum: 0.65
+      minimum_support: 200
+    - slice: senior_citizen
+      metric: f1
+      minimum: 0.65
+      minimum_support: 200

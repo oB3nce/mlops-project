@@ -28,7 +28,10 @@ dist/
 
 mlruns/
 #Adatok és modellek
-# data/raw/*
+data/raw/*
+data/processed/*
+models/*.pkl
+models/*.joblib
 # !data/raw/*.dvc
 # !data/raw/.gitignore
 # data/processed/

@@ -1,0 +1,66 @@
+{
+  "checks": [
+    {
+      "minimum": 0.79,
+      "name": "absolute_floor.accuracy",
+      "observed": 0.802,
+      "status": "pass"
+    },
+    {
+      "minimum": 0.78,
+      "name": "absolute_floor.f1",
+      "observed": 0.7939,
+      "status": "pass"
+    },
+    {
+      "baseline": 0.7939,
+      "minimum": 0.7839,
+      "name": "regression.f1",
+      "observed": 0.7939,
+      "status": "pass",
+      "tolerance": 0.01
+    },
+    {
+      "minimum": 0.65,
+      "minimum_support": 200,
+      "n": 773,
+      "name": "slice.contract.month_to_month.f1",
+      "observed": 0.6958,
+      "status": "pass"
+    },
+    {
+      "minimum": 0.65,
+      "minimum_support": 200,
+      "n": 300,
+      "name": "slice.contract.one_year.f1",
+      "observed": 0.8222,
+      "status": "pass"
+    },
+    {
+      "minimum": 0.65,
+      "minimum_support": 200,
+      "n": 336,
+      "name": "slice.contract.two_year.f1",
+      "observed": 0.96,
+      "status": "pass"
+    },
+    {
+      "minimum": 0.65,
+      "minimum_support": 200,
+      "n": 1187,
+      "name": "slice.senior_citizen.non_senior.f1",
+      "observed": 0.8125,
+      "status": "pass"
+    },
+    {
+      "minimum": 0.65,
+      "minimum_support": 200,
+      "n": 222,
+      "name": "slice.senior_citizen.senior.f1",
+      "observed": 0.692,
+      "status": "pass"
+    }
+  ],
+  "criteria_version": "1",
+  "verdict": "pass"
+}

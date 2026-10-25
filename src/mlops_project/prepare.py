@@ -7,6 +7,7 @@ import yaml
 from sklearn.model_selection import train_test_split
 
 from .config import load_settings
+from .schemas import IngestionSchema, ModelInputSchema
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -44,7 +45,10 @@ def prepare() -> tuple[Path, Path]:
     if not data_path.is_file():
         raise FileNotFoundError(f"Input dataset does not exist: {data_path}")
 
-    frame = _normalize_columns(pd.read_csv(data_path))
+    frame = pd.read_csv(data_path, dtype={"TotalCharges": "string"})
+    raw_frame = IngestionSchema.validate(frame)
+    frame = raw_frame.copy()
+    frame = _normalize_columns(frame)
     if settings.target_column not in frame.columns:
         raise KeyError(
             f"Target column {settings.target_column!r} not found in {data_path}. "
@@ -61,6 +65,7 @@ def prepare() -> tuple[Path, Path]:
         if column.casefold().endswith("id") and features[column].is_unique
     ]
     features = features.drop(columns=identifier_columns)
+    ModelInputSchema.validate(features)
     prepared = pd.concat([features, frame[settings.target_column]], axis=1)
 
     test_size, random_state = _load_prepare_params()
@@ -77,13 +82,15 @@ def prepare() -> tuple[Path, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     train_path = output_dir / "train.csv"
     test_path = output_dir / "test.csv"
+    raw_slices_path = output_dir / "test_raw_slices.csv"
     train_frame.to_csv(train_path, index=False)
     test_frame.to_csv(test_path, index=False)
+    raw_frame.loc[test_frame.index].to_csv(raw_slices_path, index=False)
     print(
         f"Prepared {len(train_frame)} training and {len(test_frame)} test rows "
         f"from {data_path.name}; excluded identifier columns: {identifier_columns}."
     )
-    return train_path, test_path
+    return train_path, test_path, raw_slices_path
 
 
 def main() -> None:

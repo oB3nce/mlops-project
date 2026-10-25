@@ -16,6 +16,8 @@ from .model import evaluate_model
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
+mlflow.set_tracking_uri("http://localhost:5500")  # Set the MLflow tracking URI to the local MLflow server
+
 def evaluate() -> dict[str, float]:
     load_dotenv(PROJECT_ROOT / ".env")
     settings = load_settings(PROJECT_ROOT)

@@ -24,6 +24,8 @@ from .config import load_settings
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
+mlflow.set_tracking_uri("http://localhost:5500")  # Set the MLflow tracking URI to the local MLflow server
+
 def _load_train_params() -> dict[str, Any]:
     params_path = PROJECT_ROOT / "params.yaml"
     with params_path.open(encoding="utf-8") as params_file:

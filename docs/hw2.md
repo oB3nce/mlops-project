@@ -256,3 +256,42 @@ The training output and file check confirm `models/model.pkl` still existed
 making any MLflow Registry calls. The degraded run was not promoted. The
 hyperparameter was restored to `max_depth: 10`, then the full pipeline was
 rerun and `reports/gate.json` returned to `"GO"`.
+
+## R8 — Fairness gap scope and limitations
+
+The reported fairness axis is `SeniorCitizen` (senior vs. non-senior). I
+chose it over `Contract` as the fairness axis because age-related group
+differences are a direct stakeholder concern for a churn model, while contract
+type describes a customer's service arrangement and is more useful here as a
+model-performance slice. Contract groups are still evaluated by the slice
+quality rules, but they are not treated as a demographic fairness comparison.
+
+On the current held-out set, the senior group's selection rate is **0.4054**
+and the non-senior group's rate is **0.1727**, for a reported
+`max(selection_rate) - min(selection_rate)` gap of **0.2327**. The TPRs are
+**0.6122** and **0.4891**, respectively, for a TPR gap of **0.1231**. These
+are prediction rates for the positive `Churn = "Yes"` class, not rates of
+access to a beneficial service.
+
+These gaps are **reported, not used as a release gate**. The values alone do
+not establish unfair treatment: actual churn prevalence differs between these
+groups (98/222 senior records versus 276/1187 non-senior records have positive
+labels), and the dataset does not provide the business context needed to set a
+defensible parity threshold. The senior group also has fewer test examples
+(222 vs. 1187), so the observed rates have different uncertainty. The results
+should prompt stakeholder investigation; a future decision to gate on a
+fairness threshold should first define the applicable policy and harm, account
+for sampling uncertainty, and be validated on additional data.
+
+One group I would want to audit but cannot with this dataset is customers by
+**race or ethnicity**. The raw CSV columns are `customerID`, `gender`,
+`SeniorCitizen`, `Partner`, `Dependents`, service/contract fields, charges,
+and `Churn`; there is no race or ethnicity attribute, so those groups cannot
+be identified or fairly inferred from the available fields. To make that audit
+possible, an appropriate race/ethnicity attribute would have had to be
+collected under a lawful, privacy-protective, voluntary data-governance
+process when the customer records were originally collected, before this
+dataset snapshot and its train/test split were created. It would also need
+consistent group definitions and enough labeled examples per group for
+meaningful estimates. It cannot be reconstructed reliably after training
+from the current data.
